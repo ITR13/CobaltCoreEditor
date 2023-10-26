@@ -316,7 +316,6 @@ public static class ImportExport
         var output = new JArray();
 
         var fakeId = 1000;
-        var hasIsForeground = false;
 
         foreach (var token in deck)
         {
@@ -327,20 +326,13 @@ public static class ImportExport
                 ["pos"] = "(40, 203)",
                 ["targetPos"] = "(40, 203)",
                 ["upgrade"] = "None",
-                // TODO: Make sure there's at least one "HoverAnim" and "Is
             };
             foreach (var property in obj.Properties())
             {
                 card[property.Name] = property.Value;
-                hasIsForeground |= property.Name == "isForeground" && property.Value.Value<bool>();
             }
 
             output.Add(card);
-        }
-
-        if (!hasIsForeground && output.Count > 0)
-        {
-            output[0]["isForeground"] = true;
         }
 
         return output;
