@@ -9,6 +9,10 @@ If the game breaks after importing, replace Save.json with the latest backup.
 
 
 ## TODO:
+[ ] Fix windows not having close button
+[ ] Fix window only being visible on main screen (?)
+
+
 ### Cobalt Core Editor
 [ ] Make proper ReadMe
 [ ] Add option to handle hard-mode artifacts
