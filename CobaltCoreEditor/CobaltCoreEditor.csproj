@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ClickableTransparentOverlay" Version="9.0.1" />
+      <PackageReference Include="ImGui.NET" Version="1.89.9.2" />
+      <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
+      <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0-rc.2.23479.6" />
+      <PackageReference Include="VdfConverter" Version="1.0.3" />
+      <PackageReference Include="Veldrid.ImGui" Version="5.89.2-ga121087cad" />
+      <PackageReference Include="Vortice.Mathematics" Version="1.7.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Settings.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>Settings.cs</LastGenOutput>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Settings.cs">
+        <AutoGen>True</AutoGen>
+        <DesignTime>True</DesignTime>
+        <DependentUpon>Settings.tt</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

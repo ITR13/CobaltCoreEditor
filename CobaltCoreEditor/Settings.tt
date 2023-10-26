@@ -1,0 +1,82 @@
+﻿<#@ template language="C#" #>
+<#@ output extension=".cs"#>
+<#
+    var properties = new (string type, string name, string defaultValue)[]
+    {
+        new() { type = "string", name = "LastSelectedRoot", defaultValue = "\"\"" },
+        new() { type = "int", name = "LastSelectedProfile", defaultValue = "-1" },
+        new() { type = "string", name = "LastSelectedGameRoot", defaultValue = "\"\"" },
+        new() { type = "string", name = "AuthorName", defaultValue = "\"\"" },
+    };
+#>
+using System.Configuration;
+using Configuration = System.Configuration.Configuration;
+
+namespace CobaltCoreEditor;
+
+public static class Settings {
+    private static SettingsSection Instance;
+    private static Configuration Config;
+
+<#
+    foreach (var (type, name, defaultValue) in properties)
+    {
+#>
+    public static <#= type #> <#= name #> 
+    {
+        get => Instance.<#= name #>;
+        set => Instance.<#= name #> = value;
+    }
+<#
+    }
+#>
+    static Settings()
+    {
+        Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoaming);
+        var configFileMap =
+            new ExeConfigurationFileMap
+            {
+                ExeConfigFilename = Config.FilePath
+            };
+        Config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
+
+        Console.WriteLine($"Loaded Settings from '{Config.FilePath}'");
+
+        if (Config.Sections["Settings"] == null)
+        {
+            Instance = new SettingsSection();
+            Config.Sections.Add("Settings", Instance);
+        }
+        else
+        {
+            Instance = (SettingsSection)Config.Sections["Settings"];
+        }
+        Instance.SectionInformation.ForceSave = true;
+    }
+
+    public static void Save()
+    {
+        Config.Save(ConfigurationSaveMode.Full);
+    }
+}
+
+public sealed class SettingsSection : ConfigurationSection
+{
+<#
+    foreach (var (type, name, defaultValue) in properties)
+    {
+#>
+
+    [ConfigurationProperty(nameof(<#= name #>),
+        DefaultValue = <#= defaultValue #>,
+        IsRequired = false,
+        IsKey = true)]
+    public <#= type #> <#= name #>
+    {
+        get => (<#= type #>)this[nameof(<#= name #>)];
+        set => this[nameof(<#= name #>)] = value;
+    }
+<#
+    }
+#>
+}
