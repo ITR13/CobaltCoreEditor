@@ -7,6 +7,7 @@ Make sure you either have the game closed, or a different profile loaded before 
 Each time you import a shipmod a backup will be created next to it. 
 If the game breaks after importing, replace Save.json with the latest backup.  
 
+NB: To close the program, press alt+f4 while having it focused.
 
 ## TODO:
 [ ] Fix windows not having close button
