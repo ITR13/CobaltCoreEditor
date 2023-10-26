@@ -33,4 +33,9 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="ExampleShips.zip" />
+      <EmbeddedResource Include="SampleShips.zip" />
+    </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Versioning;
+﻿using System.Reflection;
+using System.Runtime.Versioning;
 using Microsoft.Win32;
 using VdfParser;
 
@@ -11,16 +12,18 @@ public static class DataManager
     private const string SteamInstallKeyName = "InstallPath";
     private const string ModFolderName = "ShipMods";
 
+    private const string SampleShipsFileName = "SampleShips.zip";
+
     public static string CurrentRootLocation { get; private set; } = "";
     public static bool CurrentRootIsValid { get; private set; }
     public static string ModFolderPath { get; private set; }
 
     public static ShipMetaData[] Ships { get; private set; }
     public static string[] ShipJsons { get; private set; }
-    
+
     private static FileSystemWatcher? _watcher;
     private static bool _dirty;
-    
+
     static DataManager()
     {
         CheckDefaultLocations();
@@ -173,7 +176,7 @@ public static class DataManager
         if (!Directory.Exists(ModFolderPath))
         {
             Directory.CreateDirectory(ModFolderPath);
-            // Add Sample Ships
+            ExportSampleShips(ModFolderPath);
         }
 
         SetupWatcher();
@@ -205,8 +208,24 @@ public static class DataManager
 
     public static void MaybeImport()
     {
-        if(!_dirty) return;
+        if (!_dirty) return;
         _dirty = false;
         (Ships, ShipJsons) = ImportExport.ReadAll(ModFolderPath);
+    }
+
+    private static void ExportSampleShips(string folderPath)
+    {
+        var currentAssembly = Assembly.GetExecutingAssembly();
+
+        using var resourceStream = currentAssembly.GetManifestResourceStream("CobaltCoreEditor." + SampleShipsFileName);
+        if (resourceStream == null)
+        {
+            Console.WriteLine("Failed to find sample ships in assembly.");
+            return;
+        }
+
+        var path = Path.Join(folderPath, SampleShipsFileName);
+        using var fileStream = File.Create(path);
+        resourceStream.CopyTo(fileStream);
     }
 }
