@@ -10,22 +10,22 @@ If the game breaks after importing, replace Save.json with the latest backup.
 NB: To close the program, press alt+f4 while having it focused.
 
 ## TODO:
-[ ] Fix windows not having close button
-[ ] Fix window only being visible on main screen (?)
+- [ ] Fix windows not having close button
+- [ ] Fix window only being visible on main screen (?)
 
 
 ### Cobalt Core Editor
-[ ] Make proper ReadMe
-[ ] Add option to handle hard-mode artifacts
-[ ] Properly export runConfig based
-[ ] Mod Support
+- [ ] Make proper ReadMe
+- [ ] Add option to handle hard-mode artifacts
+- [ ] Properly export runConfig based
+- [ ] Mod Support
 
 ### Ship Designer
-[ ] Load sprites from data
-[ ] Add ui to easily modify ship based on a base ship
-[ ] Add ui to modify ship's stats and if to export them or not
-[ ] Import shipmod
-[ ] Mod Support
+- [ ] Load sprites from data
+- [ ] Add ui to easily modify ship based on a base ship
+- [ ] Add ui to modify ship's stats and if to export them or not
+- [ ] Import shipmod
+- [ ] Mod Support
 
 ### Map Designer
-[ ] Figure out how map designer should work
+- [ ] Figure out how map designer should work
