@@ -1,7 +1,7 @@
 # ITR'S COBALT CORE SHIP EDITOR
 
 ## READ THIS!
-***MB: WORK IN PROGRESS, NOT FULLY FLESHED OUT YET**
+_**NB: WORK IN PROGRESS, NOT FULLY FLESHED OUT YET**_  
 Make sure you either have the game closed, or a different profile loaded before you import a shipmod!  
 
 Each time you import a shipmod a backup will be created next to it. 
