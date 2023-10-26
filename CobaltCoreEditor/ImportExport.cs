@@ -98,6 +98,7 @@ public static class ImportExport
                 "targetPos",
                 "hoverAnim",
                 "isForeground",
+                "drawAnim",
             };
 
             var cardList = new JArray();
@@ -219,7 +220,7 @@ public static class ImportExport
 
         if (resetPosition)
         {
-            profile["map"]["currentLocation"] = "(0, 2)";
+            profile["map"]["currentLocation"] = "(2, 0)";
         }
         
         var json = JsonConvert.SerializeObject(profile);
