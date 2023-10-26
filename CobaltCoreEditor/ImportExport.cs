@@ -222,7 +222,7 @@ public static class ImportExport
         {
             profile["map"]["currentLocation"] = "(2, 0)";
         }
-        
+
         var json = JsonConvert.SerializeObject(profile);
         File.WriteAllText(profilePath, json);
     }
@@ -287,6 +287,8 @@ public static class ImportExport
             var obj = (JObject)token;
             var artifact = new JObject()
             {
+                // NB: Type MUST be first!
+                ["$type"] = null, 
                 ["glowTimer"] = 0.0f,
                 ["animation"] = null,
                 ["lastScreenPos"] = $"({pos}, {(upper ? 3 : 16)})",
@@ -323,6 +325,8 @@ public static class ImportExport
             var obj = (JObject)token;
             var card = new JObject()
             {
+                // NB: Type MUST be first!
+                ["$type"] = null, 
                 ["uuid"] = fakeId++,
                 ["pos"] = "(40, 203)",
                 ["targetPos"] = "(40, 203)",
