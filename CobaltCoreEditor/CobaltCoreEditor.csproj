@@ -1,41 +1,78 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
+        <OutputType>WinExe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
-
+    
+    <PropertyGroup>
+        <BeautySharedRuntimeMode>False</BeautySharedRuntimeMode>
+        <!-- beauty into sub-directory, default is libs, quote with "" if contains space  -->
+        <BeautyLibsDir Condition="$(BeautySharedRuntimeMode) == 'True'">../libraries</BeautyLibsDir>
+        <BeautyLibsDir Condition="$(BeautySharedRuntimeMode) != 'True'">./libraries</BeautyLibsDir>
+        <!-- dlls that you don't want to be moved or can not be moved -->
+        <!-- <BeautyExcludes>dll1.dll;lib*;...</BeautyExcludes> -->
+        <!-- dlls that end users never needed, so hide them -->
+        <BeautyHiddens>hostfxr;hostpolicy;*.deps.json;*.runtimeconfig*.json</BeautyHiddens>
+        <!-- set to True if you want to disable -->
+        <DisableBeauty>False</DisableBeauty>
+        <!-- set to False if you want to beauty on build -->
+        <BeautyOnPublishOnly>False</BeautyOnPublishOnly>
+        <!-- set to True if you want to allow 3rd debuggers(like dnSpy) debugs the app -->
+        <BeautyEnableDebugging>False</BeautyEnableDebugging>
+        <!-- the patch can reduce the file count -->
+        <!-- set to False if you want to disable -->
+        <!-- SCD Mode Feature Only -->
+        <BeautyUsePatch>True</BeautyUsePatch>
+        <!-- App Entry Dll = BeautyDir + BeautyAppHostDir + BeautyAppHostEntry -->
+        <!-- see https://github.com/nulastudio/NetBeauty2#customize-apphost for more details -->
+        <!-- relative path based on AppHostDir -->
+        <!-- .NET Core Non Single-File Only -->
+        <!-- <BeautyAppHostEntry>bin/MyApp.dll</BeautyAppHostEntry> -->
+        <!-- relative path based on BeautyDir -->
+        <!-- .NET Core Non Single-File Only -->
+        <!-- <BeautyAppHostDir>..</BeautyAppHostDir> -->
+        <!-- <BeautyAfterTasks></BeautyAfterTasks> -->
+        <!-- valid values: Error|Detail|Info -->
+        <BeautyLogLevel>Info</BeautyLogLevel>
+        <!-- set to a repo mirror if you have troble in connecting github -->
+        <!-- <BeautyGitCDN>https://gitee.com/liesauer/HostFXRPatcher</BeautyGitCDN> -->
+        <!-- <BeautyGitTree>master</BeautyGitTree> -->
+    </PropertyGroup>
+    
     <ItemGroup>
-      <PackageReference Include="ClickableTransparentOverlay" Version="9.0.1" />
-      <PackageReference Include="ImGui.NET" Version="1.89.9.2" />
-      <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
-      <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0-rc.2.23479.6" />
-      <PackageReference Include="VdfConverter" Version="1.0.3" />
-      <PackageReference Include="Veldrid.ImGui" Version="5.89.2-ga121087cad" />
-      <PackageReference Include="Vortice.Mathematics" Version="1.7.2" />
+        <PackageReference Include="ClickableTransparentOverlay" Version="9.0.1" />
+        <PackageReference Include="ImGui.NET" Version="1.89.9.2" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="nulastudio.NetBeauty" Version="2.1.4.1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0-rc.2.23479.6" />
+        <PackageReference Include="VdfConverter" Version="1.0.3" />
+        <PackageReference Include="Vortice.Mathematics" Version="1.7.2" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Settings.tt">
-        <Generator>TextTemplatingFileGenerator</Generator>
-        <LastGenOutput>Settings.cs</LastGenOutput>
-      </None>
+        <None Update="Settings.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>Settings.cs</LastGenOutput>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Settings.cs">
-        <AutoGen>True</AutoGen>
-        <DesignTime>True</DesignTime>
-        <DependentUpon>Settings.tt</DependentUpon>
-      </Compile>
+        <Compile Update="Settings.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>Settings.tt</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="ExampleShips.zip" />
-      <EmbeddedResource Include="SampleShips.zip" />
+        <None Remove="ExampleShips.zip" />
+        <EmbeddedResource Include="SampleShips.zip" />
     </ItemGroup>
 
 </Project>
