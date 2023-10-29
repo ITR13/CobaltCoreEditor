@@ -17,7 +17,7 @@ The importer works best if you start right after beginning a new loop. That mean
 After you begin a new timeloop at your selected difficulty, either close the game completely, or select a different profile. Otherwise the game will override whatever ship you select to import.
 
 The import section looks like this:  
-![Import (Text), Reset Position (Toggle), Backup (Toggle), Import (Button)](https://raw.githubusercontent.com/ITR13/CobaltCoreEditor/main/.readme/ImportSection.png)  
+![Import (Text), Reset Position (Toggle), Backup (Toggle), Import (Button)](https://raw.githubusercontent.com/ITR13/CobaltCoreEditor/main/.readme/Import.png)  
 - If you have "Reset Position" checked, the ship will be set back to the starting position of the current sector.
 - If you have "Backup" checked, your profile will create a backup in the same folder. This is useful to prevent you from accidentally ruining your save-file permanently.  
 
