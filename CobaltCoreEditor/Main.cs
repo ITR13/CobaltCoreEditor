@@ -408,7 +408,7 @@ public class Main : Overlay
         {
             ImGui.PushID(i);
             ImGui.BeginChild("Ship", new Vector2(WindowWidth / QuickImportColumns, 120));
-            RenderShip(DataManager.ShipJsons[i], DataManager.Ships[i]);
+            RenderShip(DataManager.ShipPaths[i], DataManager.Ships[i]);
             ImGui.EndChild();
             if (i < lastIndex && i % QuickImportColumns != QuickImportColumns - 1)
             {
@@ -419,7 +419,7 @@ public class Main : Overlay
         }
     }
 
-    private void RenderShip(in string patchJson, in ShipMetaData shipMetaData)
+    private void RenderShip(in DataManager.ShipPath shipPath, in ShipMetaData shipMetaData)
     {
         ImGui.SeparatorText(shipMetaData.Name);
         ImGui.Text(ExportAuthor);
@@ -432,7 +432,11 @@ public class Main : Overlay
         ImGui.SameLine();
         if (ImGui.Button(ImportTitle))
         {
-            ImportExport.Patch(ProfileManager.GetSlotPath(_pickedProfile), patchJson, _resetPosition, _backup);
+            var patchJson = ImportExport.LoadJson(shipPath);
+            if (patchJson != null)
+            {
+                ImportExport.Patch(ProfileManager.GetSlotPath(_pickedProfile), patchJson, _resetPosition, _backup);
+            }
         }
 
         ImGui.TextWrapped(description);

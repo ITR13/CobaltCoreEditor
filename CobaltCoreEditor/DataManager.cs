@@ -7,6 +7,12 @@ namespace CobaltCoreEditor;
 
 public static class DataManager
 {
+    public struct ShipPath
+    {
+        public string Path;
+        public string? ZipPath;
+    }
+    
     private const string SteamInstallSubKey64 = @"SOFTWARE\WOW6432Node\Valve\Steam";
     private const string SteamInstallSubKey32 = @"SOFTWARE\Valve\Steam";
     private const string SteamInstallKeyName = "InstallPath";
@@ -15,11 +21,11 @@ public static class DataManager
     private const string SampleShipsFileName = "SampleShips.zip";
 
     public static string CurrentRootLocation { get; private set; } = "";
-    public static bool CurrentRootIsValid { get; private set; }
-    public static string ModFolderPath { get; private set; }
+    public static bool CurrentRootIsValid { get; private set; } = false;
+    public static string ModFolderPath { get; private set; } = "";
 
-    public static ShipMetaData[] Ships { get; private set; }
-    public static string[] ShipJsons { get; private set; }
+    public static ShipMetaData[] Ships { get; private set; } = Array.Empty<ShipMetaData>();
+    public static ShipPath[] ShipPaths { get; private set; } = Array.Empty<ShipPath>();
 
     private static FileSystemWatcher? _watcher;
     private static bool _dirty;
@@ -192,13 +198,13 @@ public static class DataManager
 
         _watcher.IncludeSubdirectories = true;
 
-        _watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+        _watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
         _watcher.Created += OnFileChanged;
         _watcher.Deleted += OnFileChanged;
         _watcher.EnableRaisingEvents = true;
 
         Ships = Array.Empty<ShipMetaData>();
-        ShipJsons = Array.Empty<string>();
+        ShipPaths = Array.Empty<ShipPath>();
     }
 
     private static void OnFileChanged(object sender, FileSystemEventArgs e)
@@ -210,7 +216,7 @@ public static class DataManager
     {
         if (!_dirty) return;
         _dirty = false;
-        (Ships, ShipJsons) = ImportExport.ReadAll(ModFolderPath);
+        (Ships, ShipPaths) = ImportExport.ReadAll(ModFolderPath);
     }
 
     private static void ExportSampleShips(string folderPath)

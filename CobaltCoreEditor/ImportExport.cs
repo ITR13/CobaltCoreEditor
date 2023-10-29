@@ -135,10 +135,10 @@ public static class ImportExport
         File.WriteAllText(path, json);
     }
 
-    public static (ShipMetaData[], string[]) ReadAll(string folder)
+    public static (ShipMetaData[], DataManager.ShipPath[]) ReadAll(string folder)
     {
         var shipMetaDatas = new List<ShipMetaData>();
-        var jsons = new List<string>();
+        var shipPath = new List<DataManager.ShipPath>();
 
         // Search in the specified folder for .ccpj files
         var ccpjFiles = Directory.GetFiles(folder, "*.ccpj", SearchOption.AllDirectories);
@@ -146,7 +146,7 @@ public static class ImportExport
         {
             var json = File.ReadAllText(file);
             shipMetaDatas.Add(ReadMetaJson(json));
-            jsons.Add(json);
+            shipPath.Add(new DataManager.ShipPath { Path = file });
         }
 
         // Search in zip files in the root folder
@@ -161,18 +161,19 @@ public static class ImportExport
                 using var reader = new StreamReader(stream);
                 var json = reader.ReadToEnd();
                 shipMetaDatas.Add(ReadMetaJson(json));
-                jsons.Add(json);
+                
+                shipPath.Add(new DataManager.ShipPath { Path = file, ZipPath = entry.FullName});
             }
         }
 
-        return (shipMetaDatas.ToArray(), jsons.ToArray());
+        return (shipMetaDatas.ToArray(), shipPath.ToArray());
     }
 
     private static ShipMetaData ReadMetaJson(string json)
     {
         var obj = JsonConvert.DeserializeObject<dynamic>(json);
         dynamic? metaObj = obj?.__meta as JObject;
-        
+
         return new ShipMetaData
         {
             Name = metaObj?.Name ?? "",
@@ -206,11 +207,11 @@ public static class ImportExport
                     case "artifacts":
                         var hardModeArtifact =
                             (profile["artifacts"] as JArray)?
-                                .FirstOrDefault(
-                                    artifact => 
-                                        ((JObject)artifact).TryGetValue("$type", out var aType) &&
-                                        aType.Value<string>() == "HARDMODE, CobaltCore"
-                                ) as JObject;
+                            .FirstOrDefault(
+                                artifact =>
+                                    ((JObject)artifact).TryGetValue("$type", out var aType) &&
+                                    aType.Value<string>() == "HARDMODE, CobaltCore"
+                            ) as JObject;
                         profile["artifacts"] = ArtifactPatch((JArray)property.Value, hardModeArtifact);
                         continue;
                     case "deck":
@@ -357,5 +358,32 @@ public static class ImportExport
         }
 
         return output;
+    }
+
+    public static string? LoadJson(in DataManager.ShipPath shipPath)
+    {
+        if (!File.Exists(shipPath.Path))
+        {
+            Console.WriteLine($"File '{shipPath.Path}' no longer exists");
+            return null;
+        }
+        
+        if (shipPath.ZipPath == null)
+        {
+            return File.ReadAllText(shipPath.Path);
+        }
+        
+        using var archive = ZipFile.OpenRead(shipPath.Path);
+        var entry = archive.GetEntry(shipPath.ZipPath);
+        if (entry == null)
+        {
+            Console.WriteLine($"Entry '{entry}' in '{shipPath.Path}' no longer exists");
+            return null;
+        }
+        
+        using var stream = entry.Open();
+        using var reader = new StreamReader(stream);
+        var json = reader.ReadToEnd();
+        return json;
     }
 }
