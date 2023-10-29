@@ -1,12 +1,11 @@
 ﻿using System.Diagnostics;
-using System.Numerics;
 using System.Runtime.InteropServices;
-using ClickableTransparentOverlay;
 using ImGuiNET;
+using Vector2 = System.Numerics.Vector2;
 
 namespace CobaltCoreEditor;
 
-public class Main : Overlay
+public class Main
 {
     private const string Title = "ITR's Cobalt Core Editor";
     private const string ProfileFolderHeader = "Profile Folder";
@@ -42,40 +41,40 @@ public class Main : Overlay
     private const int QuickImportColumns = 4;
 
 
-    private string _gameFolderInputText = DataManager.CurrentRootLocation;
-    private bool _gameFolderInputValid = DataManager.CurrentRootIsValid;
+    private static string _gameFolderInputText = DataManager.CurrentRootLocation;
+    private static bool _gameFolderInputValid = DataManager.CurrentRootIsValid;
 
-    private string _rootFolderInputText = ProfileManager.CurrentRootLocation;
-    private bool _rootFolderInputValid = ProfileManager.CurrentRootIsValid;
+    private static string _rootFolderInputText = ProfileManager.CurrentRootLocation;
+    private static bool _rootFolderInputValid = ProfileManager.CurrentRootIsValid;
 
-    private bool _folderPickerIsOpen, _filePickerIsOpen;
-    private Func<string, bool>? _filePickerTarget;
+    private static bool _folderPickerIsOpen, _filePickerIsOpen;
+    private static Func<string, bool>? _filePickerTarget;
 
-    private int _pickedProfile = Settings.LastSelectedProfile;
+    private static int _pickedProfile = Settings.LastSelectedProfile;
 
-    private bool ProfileSelectionValid =>
+    private static bool ProfileSelectionValid =>
         _rootFolderInputValid &&
         _pickedProfile >= 0 &&
         ProfileManager.ValidProfiles[_pickedProfile];
 
-    private bool PathSelectionValid => _gameFolderInputValid && ProfileSelectionValid;
+    private static bool PathSelectionValid => _gameFolderInputValid && ProfileSelectionValid;
 
-    private ShipMetaData _shipMetaData = new()
+    private static ShipMetaData _shipMetaData = new()
     {
         Author = Settings.AuthorName,
         RequiredMods = new List<string>(),
     };
 
-    private bool _exportShip = true, _exportArtifacts, _exportDeck, _exportCharacters, _exportMap;
-    private bool _resetPosition = true, _backup = true;
+    private static bool _exportShip = true, _exportArtifacts, _exportDeck, _exportCharacters, _exportMap;
+    private static bool _resetPosition = true, _backup = true;
 
-    protected override void Render()
+    public static void Draw()
     {
         DataManager.MaybeImport();
         var folderPickerWasOpen = _folderPickerIsOpen;
         var filePickerWasOpen = _filePickerIsOpen;
 
-        ImGui.Begin(Title);
+        ImGui.Begin(Title, ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.AlwaysAutoResize);
 
         ImGui.BeginDisabled(_filePickerIsOpen || _folderPickerIsOpen);
         {
@@ -109,7 +108,7 @@ public class Main : Overlay
         ImGui.End();
     }
 
-    private void RenderFolderPicker()
+    private static void RenderFolderPicker()
     {
         if (!_folderPickerIsOpen) return;
         if (!ImGui.BeginPopupModal("folder-picker", ref _folderPickerIsOpen, ImGuiWindowFlags.NoTitleBar))
@@ -119,17 +118,17 @@ public class Main : Overlay
             return;
         }
 
-        var picker = FilePicker.GetFolderPicker(this, _rootFolderInputText);
+        var picker = FilePicker.GetFolderPicker(_rootFolderInputText);
         if (picker.Draw())
         {
             _filePickerTarget?.Invoke(picker.SelectedFile);
-            FilePicker.RemoveFilePicker(this);
+            FilePicker.RemoveFilePicker(picker);
         }
 
         ImGui.EndPopup();
     }
 
-    private void RenderFilePicker()
+    private static void RenderFilePicker()
     {
         if (!_filePickerIsOpen) return;
         if (!ImGui.BeginPopupModal("file-picker", ref _filePickerIsOpen, ImGuiWindowFlags.NoTitleBar))
@@ -139,17 +138,17 @@ public class Main : Overlay
             return;
         }
 
-        var picker = FilePicker.GetFilePicker(this, DataManager.ModFolderPath, ".ccpj");
+        var picker = FilePicker.GetFilePicker(DataManager.ModFolderPath, ".ccpj");
         if (picker.Draw())
         {
             _filePickerTarget?.Invoke(picker.SelectedFile);
-            FilePicker.RemoveFilePicker(this);
+            FilePicker.RemoveFilePicker(picker);
         }
 
         ImGui.EndPopup();
     }
 
-    private unsafe void RenderGameFolderBar()
+    private static unsafe void RenderGameFolderBar()
     {
         ImGui.Text(GameFolderHeader);
         ImGui.SameLine(150);
@@ -169,7 +168,7 @@ public class Main : Overlay
         _filePickerTarget = DataManager.TrySetRootFolder;
     }
 
-    private unsafe void RenderRootFolderBar()
+    private static unsafe void RenderRootFolderBar()
     {
         ImGui.Text(ProfileFolderHeader);
         ImGui.SameLine(150);
@@ -189,7 +188,7 @@ public class Main : Overlay
         _filePickerTarget = ProfileManager.TrySetRootFolder;
     }
 
-    private unsafe void RenderProfilePicker()
+    private static unsafe void RenderProfilePicker()
     {
         ImGui.Text(ProfileHeader);
         ImGui.SameLine(150);
@@ -262,7 +261,7 @@ public class Main : Overlay
         ImGui.EndDisabled();
     }
 
-    private void RenderExport()
+    private static void RenderExport()
     {
         ImGui.BeginChild(ExportTitle, new Vector2(WindowWidth / 3, 120));
         ImGui.SeparatorText(ExportTitle);
@@ -322,7 +321,7 @@ public class Main : Overlay
         ImGui.EndChild();
     }
 
-    private void RenderExportInfo()
+    private static void RenderExportInfo()
     {
         ImGui.BeginChild(ExportInfoTitle, new Vector2(WindowWidth / 3, 120));
         ImGui.SeparatorText(ExportInfoTitle);
@@ -370,7 +369,7 @@ public class Main : Overlay
         ImGui.EndChild();
     }
 
-    private void RenderImport()
+    private static void RenderImport()
     {
         ImGui.BeginChild(ImportTitle, new Vector2(WindowWidth / 6, 120));
         ImGui.SeparatorText(ImportTitle);
@@ -400,7 +399,7 @@ public class Main : Overlay
         ImGui.EndChild();
     }
 
-    private void RenderShips()
+    private static void RenderShips()
     {
         if (!DataManager.CurrentRootIsValid) return;
         var lastIndex = DataManager.Ships.Length - 1;
@@ -419,7 +418,7 @@ public class Main : Overlay
         }
     }
 
-    private void RenderShip(in DataManager.ShipPath shipPath, in ShipMetaData shipMetaData)
+    private static void RenderShip(in DataManager.ShipPath shipPath, in ShipMetaData shipMetaData)
     {
         ImGui.SeparatorText(shipMetaData.Name);
         ImGui.Text(ExportAuthor);
@@ -442,7 +441,7 @@ public class Main : Overlay
         ImGui.TextWrapped(description);
     }
 
-    private unsafe int TrySetRootFolder(ImGuiInputTextCallbackData* data)
+    private static unsafe int TrySetRootFolder(ImGuiInputTextCallbackData* data)
     {
         if (data->BufTextLen == 0)
         {
@@ -458,7 +457,7 @@ public class Main : Overlay
         return 0;
     }
 
-    private unsafe int TrySetGameFolder(ImGuiInputTextCallbackData* data)
+    private static unsafe int TrySetGameFolder(ImGuiInputTextCallbackData* data)
     {
         if (data->BufTextLen == 0)
         {

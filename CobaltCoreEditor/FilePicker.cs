@@ -10,7 +10,7 @@ namespace CobaltCoreEditor;
 
 public class FilePicker
 {
-    private static readonly Dictionary<object, FilePicker> FilePickers = new Dictionary<object, FilePicker>();
+    private static FilePicker? _instance;
 
     public string RootFolder = "";
     public string CurrentFolder = "";
@@ -18,11 +18,10 @@ public class FilePicker
     public readonly List<string> AllowedExtensions = new();
     public bool OnlyAllowFolders;
 
-    public static FilePicker GetFolderPicker(object o, string startingPath)
-        => GetFilePicker(o, startingPath, null, true);
+    public static FilePicker GetFolderPicker(string startingPath)
+        => GetFilePicker(startingPath, null, true);
 
     public static FilePicker GetFilePicker(
-        object o,
         string startingPath,
         string? searchFilter = null,
         bool onlyAllowFolders = false
@@ -38,9 +37,9 @@ public class FilePicker
             if (string.IsNullOrEmpty(startingPath)) startingPath = AppContext.BaseDirectory;
         }
 
-        if (FilePickers.TryGetValue(o, out var fp)) return fp;
+        if (_instance!=null) return _instance;
         
-        fp = new FilePicker
+        var fp = new FilePicker
         {
             RootFolder = startingPath,
             CurrentFolder = startingPath,
@@ -56,12 +55,14 @@ public class FilePicker
             );
         }
 
-        FilePickers.Add(o, fp);
-
+        _instance = fp;
         return fp;
     }
 
-    public static void RemoveFilePicker(object o) => FilePickers.Remove(o);
+    public static void RemoveFilePicker(FilePicker fp)
+    {
+        if (fp == _instance) _instance = null;
+    }
 
     public bool Draw()
     {

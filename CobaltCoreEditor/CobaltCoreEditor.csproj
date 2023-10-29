@@ -45,14 +45,15 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="ClickableTransparentOverlay" Version="9.0.1" />
         <PackageReference Include="ImGui.NET" Version="1.89.9.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="nulastudio.NetBeauty" Version="2.1.4.1" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0-rc.2.23479.6" />
         <PackageReference Include="VdfConverter" Version="1.0.3" />
-        <PackageReference Include="Vortice.Mathematics" Version="1.7.2" />
+        <PackageReference Include="Veldrid" Version="4.9.0" />
+        <PackageReference Include="Veldrid.SDL2" Version="4.9.0" />
+        <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -73,6 +74,48 @@
     <ItemGroup>
         <None Remove="ExampleShips.zip" />
         <EmbeddedResource Include="SampleShips.zip" />
+        <None Remove="Assets\GLSL\imgui-frag.glsl" />
+        <EmbeddedResource Include="Assets\GLSL\imgui-frag.glsl" />
+        <None Remove="Assets\GLSL\imgui-vertex.glsl" />
+        <EmbeddedResource Include="Assets\GLSL\imgui-vertex.glsl" />
+        <None Remove="Assets\GLSL\imgui-vertex-legacy.glsl" />
+        <EmbeddedResource Include="Assets\GLSL\imgui-vertex-legacy.glsl" />
+        <None Remove="Assets\GLSLES\imgui-frag.glsles" />
+        <EmbeddedResource Include="Assets\GLSLES\imgui-frag.glsles" />
+        <None Remove="Assets\GLSLES\imgui-vertex-legacy.glsles" />
+        <EmbeddedResource Include="Assets\GLSLES\imgui-vertex-legacy.glsles" />
+        <None Remove="Assets\GLSLES\imgui-vertex.glsles" />
+        <EmbeddedResource Include="Assets\GLSLES\imgui-vertex.glsles" />
+        <None Remove="Assets\HLSL\imgui-frag.hlsl" />
+        <EmbeddedResource Include="Assets\HLSL\imgui-frag.hlsl" />
+        <None Remove="Assets\HLSL\imgui-vertex.hlsl.bytes" />
+        <EmbeddedResource Include="Assets\HLSL\imgui-vertex.hlsl.bytes" />
+        <None Remove="Assets\HLSL\imgui-vertex-legacy.hlsl.bytes" />
+        <EmbeddedResource Include="Assets\HLSL\imgui-vertex-legacy.hlsl.bytes" />
+        <None Remove="Assets\HLSL\imgui-vertex-legacy.hlsl" />
+        <EmbeddedResource Include="Assets\HLSL\imgui-vertex-legacy.hlsl" />
+        <None Remove="Assets\HLSL\imgui-vertex.hlsl" />
+        <EmbeddedResource Include="Assets\HLSL\imgui-vertex.hlsl" />
+        <None Remove="Assets\HLSL\imgui-frag.hlsl.bytes" />
+        <EmbeddedResource Include="Assets\HLSL\imgui-frag.hlsl.bytes" />
+        <None Remove="Assets\Metal\imgui-frag.metal" />
+        <EmbeddedResource Include="Assets\Metal\imgui-frag.metal" />
+        <None Remove="Assets\Metal\imgui-vertex.metal" />
+        <EmbeddedResource Include="Assets\Metal\imgui-vertex.metal" />
+        <None Remove="Assets\Metal\imgui-vertex.metallib" />
+        <EmbeddedResource Include="Assets\Metal\imgui-vertex.metallib" />
+        <None Remove="Assets\Metal\imgui-frag.metallib" />
+        <EmbeddedResource Include="Assets\Metal\imgui-frag.metallib" />
+        <None Remove="Assets\SPIR-V\generate-spirv.bat" />
+        <EmbeddedResource Include="Assets\SPIR-V\generate-spirv.bat" />
+        <None Remove="Assets\SPIR-V\imgui-frag.spv" />
+        <EmbeddedResource Include="Assets\SPIR-V\imgui-frag.spv" />
+        <None Remove="Assets\SPIR-V\imgui-frag.glsl" />
+        <EmbeddedResource Include="Assets\SPIR-V\imgui-frag.glsl" />
+        <None Remove="Assets\SPIR-V\imgui-vertex.glsl" />
+        <EmbeddedResource Include="Assets\SPIR-V\imgui-vertex.glsl" />
+        <None Remove="Assets\SPIR-V\imgui-vertex.spv" />
+        <EmbeddedResource Include="Assets\SPIR-V\imgui-vertex.spv" />
     </ItemGroup>
 
 </Project>
