@@ -150,6 +150,7 @@ public class Main
 
     private static unsafe void RenderGameFolderBar()
     {
+        ImGui.BeginChild(GameFolderHeader, new Vector2(WindowWidth, 25));
         ImGui.Text(GameFolderHeader);
         ImGui.SameLine(150);
         ImGui.PushStyleColor(ImGuiCol.Text, _gameFolderInputValid ? Green : Red);
@@ -163,13 +164,17 @@ public class Main
         ImGui.PopStyleColor();
         ImGui.SameLine();
 
-        if (!ImGui.Button(SelectButton + "##GameFolder")) return;
-        _folderPickerIsOpen = true;
-        _filePickerTarget = DataManager.TrySetRootFolder;
+        if (ImGui.Button(SelectButton + "##GameFolder"))
+        {
+            _folderPickerIsOpen = true;
+            _filePickerTarget = DataManager.TrySetRootFolder;
+        }
+        ImGui.EndChild();
     }
 
     private static unsafe void RenderRootFolderBar()
     {
+        ImGui.BeginChild(ProfileFolderHeader, new Vector2(WindowWidth, 25));
         ImGui.Text(ProfileFolderHeader);
         ImGui.SameLine(150);
         ImGui.PushStyleColor(ImGuiCol.Text, _rootFolderInputValid ? Green : Red);
@@ -183,9 +188,12 @@ public class Main
         ImGui.PopStyleColor();
         ImGui.SameLine();
 
-        if (!ImGui.Button(SelectButton + "##DataFolder")) return;
-        _folderPickerIsOpen = true;
-        _filePickerTarget = ProfileManager.TrySetRootFolder;
+        if (ImGui.Button(SelectButton + "##DataFolder"))
+        {
+            _folderPickerIsOpen = true;
+            _filePickerTarget = ProfileManager.TrySetRootFolder;
+        }
+        ImGui.EndChild();
     }
 
     private static unsafe void RenderProfilePicker()
