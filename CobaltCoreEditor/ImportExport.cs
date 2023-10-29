@@ -25,7 +25,6 @@ public static class ImportExport
         ShipMetaData metaData
     )
     {
-        // TODO: runConfig stuff
         dynamic toExport = new ExpandoObject();
         toExport.__meta = metaData;
 
@@ -131,6 +130,21 @@ public static class ImportExport
             toExport.characters = obj.characters;
         }
 
+        if (ship || characters)
+        {
+            var runConfig = new JObject();
+            if (ship)
+            {
+                runConfig["selectedShip"] = obj.runConfig.selectedShip;
+            }
+            if (characters)
+            {
+                runConfig["selectedChars"] = obj.runConfig.selectedChars;
+            }
+
+            toExport.runConfig = runConfig;
+        }
+
         var json = JsonConvert.SerializeObject(toExport);
         File.WriteAllText(path, json);
     }
@@ -161,8 +175,8 @@ public static class ImportExport
                 using var reader = new StreamReader(stream);
                 var json = reader.ReadToEnd();
                 shipMetaDatas.Add(ReadMetaJson(json));
-                
-                shipPath.Add(new DataManager.ShipPath { Path = file, ZipPath = entry.FullName});
+
+                shipPath.Add(new DataManager.ShipPath { Path = file, ZipPath = entry.FullName });
             }
         }
 
@@ -216,6 +230,9 @@ public static class ImportExport
                         continue;
                     case "deck":
                         profile["deck"] = DeckPatch((JArray)property.Value);
+                        continue;
+                    case "runConfig":
+                        profile["runConfig"] = RunConfig((JObject)profile["runConfig"]!, (JObject)value);
                         continue;
                     case "map":
                     case "characters":
@@ -359,6 +376,25 @@ public static class ImportExport
 
         return output;
     }
+    
+    
+    private static JObject RunConfig(JObject original, JObject ship)
+    {
+        var output = new JObject();
+
+        foreach (var property in original.Properties())
+        {
+            output[property.Name] = property.Value;
+        }
+        
+        foreach (var property in ship.Properties())
+        {
+            output[property.Name] = property.Value;
+        }
+
+        return output;
+    }
+
 
     public static string? LoadJson(in DataManager.ShipPath shipPath)
     {
@@ -367,12 +403,12 @@ public static class ImportExport
             Console.WriteLine($"File '{shipPath.Path}' no longer exists");
             return null;
         }
-        
+
         if (shipPath.ZipPath == null)
         {
             return File.ReadAllText(shipPath.Path);
         }
-        
+
         using var archive = ZipFile.OpenRead(shipPath.Path);
         var entry = archive.GetEntry(shipPath.ZipPath);
         if (entry == null)
@@ -380,7 +416,7 @@ public static class ImportExport
             Console.WriteLine($"Entry '{entry}' in '{shipPath.Path}' no longer exists");
             return null;
         }
-        
+
         using var stream = entry.Open();
         using var reader = new StreamReader(stream);
         var json = reader.ReadToEnd();
