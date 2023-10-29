@@ -326,7 +326,7 @@ public class ImGuiRenderer : IDisposable
                 return GetEmbeddedResourceBytes(resourceName);
             }
             default:
-                throw new NotImplementedException();
+                throw new ArgumentException($"Unkown graphics backend {factory.BackendType}", nameof(factory));
         }
     }
 
@@ -746,7 +746,7 @@ public class ImGuiRenderer : IDisposable
                 var pcmd = cmdList.CmdBuffer[cmdI];
                 if (pcmd.UserCallback != IntPtr.Zero)
                 {
-                    throw new NotImplementedException();
+                    throw new Exception("UserCallback not supported");
                 }
 
                 if (pcmd.TextureId != IntPtr.Zero)
