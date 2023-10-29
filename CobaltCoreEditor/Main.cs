@@ -285,30 +285,40 @@ public class Main : Overlay
             var obj = ImportExport.Import(path);
             var shipName = FileSystemHelper.MakeValidFileName(_shipMetaData.Name);
             var now = FileSystemHelper.Now();
-            
-            ImportExport.Export(
-                Path.Combine(DataManager.ModFolderPath, $"{shipName}_{now}.ccpj"),
-                obj,
-                _exportShip,
-                _exportArtifacts,
-                _exportDeck,
-                _exportMap,
-                _exportCharacters,
-                _shipMetaData
-            );
+
+            try
+            {
+                ImportExport.Export(
+                    Path.Combine(DataManager.ModFolderPath, $"{shipName}_{now}.ccpj"),
+                    obj,
+                    _exportShip,
+                    _exportArtifacts,
+                    _exportDeck,
+                    _exportMap,
+                    _exportCharacters,
+                    _shipMetaData
+                );
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception Message: " + ex.Message);
+                Console.WriteLine("Stack Trace: " + ex.StackTrace);
+            }
+
             if (Settings.AuthorName != _shipMetaData.Author)
             {
                 Settings.AuthorName = _shipMetaData.Author;
                 Settings.Save();
             }
         }
+
         ImGui.EndDisabled();
         ImGui.SameLine();
         if (ImGui.Button(OpenContainingDirectory))
         {
             FileSystemHelper.Open(DataManager.ModFolderPath);
         }
-        
+
         ImGui.EndChild();
     }
 
@@ -321,11 +331,13 @@ public class Main : Overlay
         {
             ImGui.PushStyleColor(ImGuiCol.Text, 0xFF4444FF);
         }
+
         ImGui.Text(ExportName);
         if (_shipMetaData.Name.Length == 0)
         {
             ImGui.PopStyleColor();
         }
+
         ImGui.SameLine(70);
         ImGui.InputText(
             "##ExportName",

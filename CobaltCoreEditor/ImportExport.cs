@@ -11,7 +11,7 @@ public static class ImportExport
     {
         var json = File.ReadAllText(path);
         var obj = JsonConvert.DeserializeObject<JObject>(json);
-        return obj;
+        return obj!;
     }
 
     public static void Export(
@@ -25,11 +25,10 @@ public static class ImportExport
         ShipMetaData metaData
     )
     {
-        // TODO: Hard mode artifact stuff
         // TODO: runConfig stuff
         dynamic toExport = new ExpandoObject();
         toExport.__meta = metaData;
-        
+
         if (ship)
         {
             dynamic shipObject = new ExpandoObject();
@@ -77,14 +76,19 @@ public static class ImportExport
             var artifactList = new JArray();
             foreach (var artifact in (JArray)obj.artifacts)
             {
-                var partObj = new JObject();
+                var isHardmode = false;
+                var artifactObj = new JObject();
                 foreach (var property in ((JObject)artifact).Properties())
                 {
                     if (ignoreEntries.Contains(property.Name)) continue;
-                    partObj[property.Name] = property.Value;
+                    isHardmode |= property.Name == "$type" && property.Value.Value<string>() == "HARDMODE, CobaltCore";
+
+                    artifactObj[property.Name] = property.Value;
                 }
 
-                artifactList.Add(partObj);
+                if (isHardmode) continue;
+
+                artifactList.Add(artifactObj);
             }
 
             toExport.artifacts = artifactList;
@@ -167,12 +171,13 @@ public static class ImportExport
     private static ShipMetaData ReadMetaJson(string json)
     {
         var obj = JsonConvert.DeserializeObject<dynamic>(json);
-        dynamic metaObj = (JObject)obj.__meta;
+        dynamic? metaObj = obj?.__meta as JObject;
+        
         return new ShipMetaData
         {
-            Name = metaObj.Name,
-            Author = metaObj.Author,
-            Description = metaObj.Description,
+            Name = metaObj?.Name ?? "",
+            Author = metaObj?.Author ?? "",
+            Description = metaObj?.Description ?? "",
         };
     }
 
@@ -185,7 +190,7 @@ public static class ImportExport
         }
 
         var profile = Import(profilePath)!;
-        var patch = JsonConvert.DeserializeObject<JObject>(patchJson);
+        var patch = JsonConvert.DeserializeObject<JObject>(patchJson)!;
         foreach (var property in patch.Properties())
         {
             try
@@ -196,10 +201,17 @@ public static class ImportExport
                     case "__meta":
                         continue;
                     case "ship":
-                        profile["ship"] = ShipPatch((JObject)profile["ship"], (JObject)value);
+                        profile["ship"] = ShipPatch((JObject)profile["ship"]!, (JObject)value);
                         continue;
                     case "artifacts":
-                        profile["artifacts"] = ArtifactPatch((JArray)property.Value);
+                        var hardModeArtifact =
+                            (profile["artifacts"] as JArray)?
+                                .FirstOrDefault(
+                                    artifact => 
+                                        ((JObject)artifact).TryGetValue("$type", out var aType) &&
+                                        aType.Value<string>() == "HARDMODE, CobaltCore"
+                                ) as JObject;
+                        profile["artifacts"] = ArtifactPatch((JArray)property.Value, hardModeArtifact);
                         continue;
                     case "deck":
                         profile["deck"] = DeckPatch((JArray)property.Value);
@@ -220,7 +232,7 @@ public static class ImportExport
 
         if (resetPosition)
         {
-            profile["map"]["currentLocation"] = "(2, 0)";
+            profile["map"]!["currentLocation"] = "(2, 0)";
         }
 
         var json = JsonConvert.SerializeObject(profile);
@@ -275,9 +287,13 @@ public static class ImportExport
         return output;
     }
 
-    private static JArray ArtifactPatch(JArray artifacts)
+    private static JArray ArtifactPatch(JArray artifacts, JObject? hardMode)
     {
         var output = new JArray();
+        if (hardMode != null)
+        {
+            output.Add(hardMode);
+        }
 
         var upper = true;
         var pos = 86;
@@ -288,7 +304,7 @@ public static class ImportExport
             var artifact = new JObject()
             {
                 // NB: Type MUST be first!
-                ["$type"] = null, 
+                ["$type"] = null,
                 ["glowTimer"] = 0.0f,
                 ["animation"] = null,
                 ["lastScreenPos"] = $"({pos}, {(upper ? 3 : 16)})",
@@ -326,7 +342,7 @@ public static class ImportExport
             var card = new JObject()
             {
                 // NB: Type MUST be first!
-                ["$type"] = null, 
+                ["$type"] = null,
                 ["uuid"] = fakeId++,
                 ["pos"] = "(40, 203)",
                 ["targetPos"] = "(40, 203)",
