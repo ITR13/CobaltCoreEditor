@@ -137,6 +137,7 @@ public static class ImportExport
             {
                 runConfig["selectedShip"] = obj.runConfig.selectedShip;
             }
+
             if (characters)
             {
                 runConfig["selectedChars"] = obj.runConfig.selectedChars;
@@ -165,6 +166,7 @@ public static class ImportExport
 
         // Search in zip files in the root folder
         var zipFiles = Directory.GetFiles(folder, "*.zip", SearchOption.TopDirectoryOnly);
+        Console.WriteLine($"Found {zipFiles.Length} zip files");
         foreach (var file in zipFiles)
         {
             using var archive = ZipFile.OpenRead(file);
@@ -376,8 +378,8 @@ public static class ImportExport
 
         return output;
     }
-    
-    
+
+
     private static JObject RunConfig(JObject original, JObject ship)
     {
         var output = new JObject();
@@ -386,7 +388,7 @@ public static class ImportExport
         {
             output[property.Name] = property.Value;
         }
-        
+
         foreach (var property in ship.Properties())
         {
             output[property.Name] = property.Value;

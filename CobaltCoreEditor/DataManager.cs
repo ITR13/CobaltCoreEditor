@@ -16,7 +16,7 @@ public static class DataManager
     private const string SteamInstallSubKey64 = @"SOFTWARE\WOW6432Node\Valve\Steam";
     private const string SteamInstallSubKey32 = @"SOFTWARE\Valve\Steam";
     private const string SteamInstallKeyName = "InstallPath";
-    private const string ModFolderName = "ShipMods";
+    private const string ModFolderName = "ShipDiffs";
 
     private const string SampleShipsFileName = "SampleShips.zip";
 

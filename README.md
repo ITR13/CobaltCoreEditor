@@ -24,7 +24,7 @@ The import section looks like this:
 If you press Import you can select a savefile from anywhere on your computer, but it's suggested that you instead use the Quick Import below that looks like this:
 ![Grid of sections with the following layout: Title (Text), Author (Text) Author Name (Text on different background) Import (Button), Description (Text)](https://raw.githubusercontent.com/ITR13/CobaltCoreEditor/main/.readme/QuickImport.png)  
 If you press Import the ship will automatically be imported to your selected savefile.
-To add more ships to this list, add them to the "ShipMods" folder in your games folder. To see this folder press "Open Containing Folder" next to "Export" in the Export Section.  
+To add more ships to this list, add them to the "ShipDiffs" folder in your games folder. To see this folder press "Open Containing Folder" next to "Export" in the Export Section.  
 This section is scrollable, so you can put as many ships in the folder as you want.  
 #### Exporting a ShipMod
 The exporter will export your currently selected slot as a shipmod. This is best combined with manual save editing, but can also be used to share interesting parts of your savefile. There are two sections needed for exporting. The Export Info section looks like this:  
@@ -38,7 +38,7 @@ The second section is the Export section, and looks like this:
 - If "Export Map" is checked, the current map and ship position will be exported.
 - If "Export Characters & Artifacts" is checked, the selected characters and character artifacts will be exported.  
 
-Pressing "Export" will export your save with the selected settings into your ShipMods folder. You can press "Open Containing Directory" to see your exported save-files.
+Pressing "Export" will export your save with the selected settings into your ShipDiffs folder. You can press "Open Containing Directory" to see your exported save-files.
 
 ## Yet to be implemented
 #### Cobalt Core Editor
