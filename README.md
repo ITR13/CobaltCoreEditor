@@ -11,7 +11,7 @@ First ensure you have the correct "Profile" selected. These correspond to slot 0
 ![Profile Picker](https://raw.githubusercontent.com/ITR13/CobaltCoreEditor/main/.readme/ProfilePicker.png)  
 You can press "Open Containing Folder" to access the the savefile of your current selected profile and see any potential backups.
 
-#### Importing a ShipMod
+#### Importing a ShipDiff
 The importer works best if you start right after beginning a new loop. That means right after pressing "Start Run" on this screen:  
 ![BEGIN TIMELOOP screen](https://raw.githubusercontent.com/ITR13/CobaltCoreEditor/main/.readme/BeginTimeloop.png)  
 After you begin a new timeloop at your selected difficulty, either close the game completely, or select a different profile. Otherwise the game will override whatever ship you select to import.
@@ -26,8 +26,8 @@ If you press Import you can select a savefile from anywhere on your computer, bu
 If you press Import the ship will automatically be imported to your selected savefile.
 To add more ships to this list, add them to the "ShipDiffs" folder in your games folder. To see this folder press "Open Containing Folder" next to "Export" in the Export Section.  
 This section is scrollable, so you can put as many ships in the folder as you want.  
-#### Exporting a ShipMod
-The exporter will export your currently selected slot as a shipmod. This is best combined with manual save editing, but can also be used to share interesting parts of your savefile. There are two sections needed for exporting. The Export Info section looks like this:  
+#### Exporting a ShipDiff
+The exporter will export your currently selected slot as a ShipDiff. This is best combined with manual save editing, but can also be used to share interesting parts of your savefile. There are two sections needed for exporting. The Export Info section looks like this:  
 ![Ship Name (Text Field), Author (Text Field), Description (Text Area)](https://raw.githubusercontent.com/ITR13/CobaltCoreEditor/main/.readme/ExportInfo.png)  
 This is the info that will be shown in the Quick Import section. You need to enter a ship name, but the author and description can be left empty. If you want to modify an already generated ship mod you need to manually edit the exported file in a text editor.  
 The second section is the Export section, and looks like this:  
@@ -39,17 +39,3 @@ The second section is the Export section, and looks like this:
 - If "Export Characters & Artifacts" is checked, the selected characters and character artifacts will be exported.  
 
 Pressing "Export" will export your save with the selected settings into your ShipDiffs folder. You can press "Open Containing Directory" to see your exported save-files.
-
-## Yet to be implemented
-#### Cobalt Core Editor
-- [ ] Mod Support
-
-#### Ship Designer
-- [ ] Load sprites from data
-- [ ] Add ui to easily modify ship based on a base ship
-- [ ] Add ui to modify ship's stats and if to export them or not
-- [ ] Import shipmod
-- [ ] Mod Support
-
-#### Map Designer
-- [ ] Figure out how map designer should work
